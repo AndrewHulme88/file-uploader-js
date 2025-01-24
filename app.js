@@ -9,6 +9,7 @@ const path = require('path');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const PORT = process.env.PORT || 3000;
+const homeRouter = require("./routes/homeRouter");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -37,6 +38,6 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => res.render("index"));
+app.use("/", homeRouter);
 
 app.listen(PORT, () => console.log("App listening on port 3000"));
