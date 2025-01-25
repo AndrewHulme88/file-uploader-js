@@ -1,6 +1,8 @@
 const passport = require("passport");
 const { Pool } = require("pg");
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const { body, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
   signUpForm: (req, res) => {
@@ -39,10 +41,10 @@ module.exports = {
       try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await pool.query(
-          "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)",
+          "INSERT INTO \"User\" (first_name, last_name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW())",
           [firstName, lastName, email, hashedPassword]
         );
-        res.redirect("/users/login");
+        res.redirect("/");
       } catch (err) {
         console.error("Error adding user", err);
         res.status(500).json({ error: "Failed to add user" });
